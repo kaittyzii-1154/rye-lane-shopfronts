@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "title": {
+    "fontSize": 0,
+    "fontFamily": "Arial, sans-serif",
+    "fontWeight": 600,
+    "lineHeight": 1.18,
+    "letterSpacing": -0.025,
+    "x": 0,
+    "y": 50,
+    "width": 90
+  },
+  "article": {
+    "fontFamily": "Georgia, serif",
+    "fontSize": 18,
+    "lineHeight": 1.85,
+    "width": 780,
+    "headingSize": 25
+  },
+  "chapterOrder": [
+    "paper.html",
+    "paper-02.html",
+    "paper-03.html",
+    "paper-04.html",
+    "paper-05.html",
+    "paper-07.html",
+    "paper-09.html",
+    "paper-10.html"
+  ]
+}
