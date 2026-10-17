@@ -25,7 +25,7 @@ function scheduleHoverCard(id){
  const record=hoverByRegion.get(id);
  if(!record)return;
  if(record.id===shownPhoto)return;
- hoverDelay=setTimeout(()=>{if(current===id&&!hoverLocked)showHoverPhoto(record)},1000);
+ hoverDelay=setTimeout(()=>{if(current===id&&!hoverLocked)showHoverPhoto(record)},300);
 }
 hoverPhoto.addEventListener('pointerenter',()=>{hoverLocked=true;clearTimeout(hoverDelay);clearTimeout(hoverClose)});
 hoverPhoto.addEventListener('pointerleave',()=>{hoverLocked=false});
