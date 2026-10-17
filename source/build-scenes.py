@@ -56,7 +56,7 @@ for number,(name,prefix,masks) in scene_data.items():
  svg=E.tostring(root,encoding='unicode')
  runtime=(site/'source/scene-camera.js').read_text().replace('SCENE_REGIONS',json.dumps(regions)).replace('SCENE_VIEW',json.dumps(view))
  hover=(site/'source/hover-cards.js').read_text().replace('CARD_RECORDS',json.dumps(records))
- page=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{name}</title><style>{css}</style></head><body><header><a href="scenes.html">← Other scenes</a><span>{name}</span><a href="index.html?start=street">Back to street ↗</a></header><div id="scene-view">{svg}</div><footer>Hover for 0.3 seconds to discover a photo · Click the photo to turn it over · Scroll to zoom · Double-click to reset</footer><script>{runtime}\n{hover}</script></body></html>'''
+ page=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{name}</title><style>{css}</style></head><body><header><a href="scenes.html">← Other scenes</a><span>{name}</span><a href="index.html?start=street">Back to street ↗</a></header><div id="scene-view">{svg}</div><script>{runtime}\n{hover}</script></body></html>'''
  if number==2 and not custom:page=page.replace('Hover for 0.3 seconds to discover a photo · Click the photo to turn it over · Scroll to zoom · Double-click to reset','Scroll to zoom · Drag to explore · Double-click to reset')
  (site/f'scene-{number:02d}.html').write_text(page);all_records[f'scene-{number:02d}.html']=dict(name=name,regions=regions,photos=records)
  print(name,len(regions),'regions',sum(len(g)-1 for g in groups),'lines')
