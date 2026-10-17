@@ -102,7 +102,12 @@ if('scrollRestoration' in history)history.scrollRestoration='manual';
 let readingReady=false,paperHeight=innerHeight;
 const readingSection=document.querySelector('#paper'),paperFrame=readingSection.querySelector('iframe');
 function setReadingReady(value){if(value===readingReady)return;readingReady=value;document.documentElement.classList.toggle('reading-ready',value);document.body.classList.toggle('reading-ready',value);readingSection.setAttribute('aria-hidden',value?'false':'true');document.body.style.height=value?(innerHeight+paperHeight)+'px':'';if(!value&&window.scrollY)window.scrollTo(0,0)}
-function syncReadingScroll(){document.body.style.setProperty('--page-scroll',`${window.scrollY}px`);document.body.classList.toggle('in-paper',window.scrollY>=innerHeight-2)}
+// This navigation belongs to the outer page so it stays clickable while the iframe scrolls.
+const readingNav=document.createElement('nav');
+readingNav.id='reading-navigation';readingNav.setAttribute('aria-label','Research paper navigation');
+readingNav.innerHTML='<a href="index.html?start=street">← Back to street</a><span>RYE LANE / RESEARCH PAPER</span><a href="scenes.html">Other scenes ↗</a>';
+readingNav.hidden=true;document.body.append(readingNav);
+function syncReadingScroll(){document.body.style.setProperty('--page-scroll',`${window.scrollY}px`);const inPaper=readingReady&&window.scrollY>=innerHeight-2;document.body.classList.toggle('in-paper',inPaper);readingNav.hidden=!inPaper}
 function enterReading(){if(readingReady)window.scrollTo({top:innerHeight,behavior:reduced?'instant':'smooth'})}
 titleLink.addEventListener('click',e=>{e.preventDefault();enterReading()});
 window.addEventListener('scroll',syncReadingScroll,{passive:true});
