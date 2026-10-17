@@ -1,0 +1,119 @@
+[
+  {
+    "id": "01",
+    "region": "bollard",
+    "label": "Street bollard",
+    "image": "assets/photo-01.svg",
+    "title": "A narrow pause",
+    "text": "Someone could pause beside the bollard to check a shopping list while other people pass between the stall and the street.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "02",
+    "region": "canopy",
+    "label": "Canopy and supports",
+    "image": "assets/photo-02.svg",
+    "title": "A change in the weather",
+    "text": "A sudden shower could bring shoppers under the canopy. A dry display might briefly become a shared place to wait.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "03",
+    "region": "hanging-fruit",
+    "label": "Hanging fruit",
+    "image": "assets/photo-03.svg",
+    "title": "A question across the stall",
+    "text": "A customer might point at a bunch of bananas and ask whether it will be ripe tomorrow. Choosing fruit can become a short conversation.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "04",
+    "region": "stall-fruit",
+    "label": "Fruit display",
+    "image": "assets/photo-04.svg",
+    "title": "Choosing and rearranging",
+    "text": "A shopper could turn a piece of fruit in their hand, while a worker quietly rearranges the display after each selection.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "05",
+    "region": "stall-racks",
+    "label": "Display racks",
+    "image": "assets/photo-05.svg",
+    "title": "The work behind the display",
+    "text": "Before the stall opens, someone could carry, stack and steady these boxes. The arrangement that looks finished depends on repeated small tasks.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "06",
+    "region": "plant-alley",
+    "label": "Alley plant",
+    "image": "assets/photo-06.svg",
+    "title": "A small detour",
+    "text": "A watering can might briefly share the passage with a delivery trolley. Two ordinary tasks could require a quick negotiation over space.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "07",
+    "region": "plant-window-top",
+    "label": "Upper window plant",
+    "image": "assets/photo-07.svg",
+    "title": "Looking through",
+    "text": "A passer-by could stop to look at the plant and notice their own reflection in the shop window.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "08",
+    "region": "plant-window-bottom",
+    "label": "Lower window plant",
+    "image": "assets/photo-08.svg",
+    "title": "Care during a quiet moment",
+    "text": "During a lull, someone might turn the pot towards the light. A tiny adjustment could be part of the work that keeps the frontage welcoming.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "09",
+    "region": "plant-window-right",
+    "label": "Right window plant",
+    "image": "assets/photo-09.svg",
+    "title": "A familiar marker",
+    "text": "A regular customer might use this plant as a meeting point: wait by the window, just past the fruit stall.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "10",
+    "region": "left-plants",
+    "label": "Climbing plants",
+    "image": "assets/photo-10.svg",
+    "title": "Changing slowly",
+    "text": "A new leaf could appear between two visits. The street changes on a different timescale from the daily movement of goods.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "11",
+    "region": "right-architecture",
+    "label": "Right and middle buildings",
+    "image": "assets/photo-11.svg",
+    "title": "One entrance, several needs",
+    "text": "A delivery, a customer and a passer-by could reach the same entrance together. Who waits, and who has room to move?",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "12",
+    "region": "left-scene",
+    "label": "Left wall and middle details",
+    "image": "assets/photo-12.svg",
+    "title": "An everyday landmark",
+    "text": "A small mark on a familiar wall might be enough for a worker to remember where a stack of boxes usually stops.",
+    "type": "Illustrative scenario"
+  },
+  {
+    "id": "13",
+    "region": "pavement",
+    "label": "Pavement and drain",
+    "image": "assets/photo-13.svg",
+    "title": "After the stall closes",
+    "text": "An empty pavement could still carry traces of the day: a loose leaf, a damp patch, or the route taken by a trolley.",
+    "type": "Illustrative scenario"
+  }
+]
