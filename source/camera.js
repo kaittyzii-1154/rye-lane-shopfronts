@@ -90,18 +90,28 @@ function zoomAt(z,x=viewport.w/2,y=viewport.h/2){
  target.x=worldX-(x-viewport.w/2)/(fit*z);target.y=worldY-(y-viewport.h/2)/(fit*z);target.z=z;clampCamera(target);scheduleCamera();
 }
 window.addEventListener('wheel',e=>{if(document.querySelector('#project-contact')?.open)return;const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.h:1);if(window.scrollY>0||(readingReady&&delta>0&&!e.ctrlKey))return;e.preventDefault();if(readingReady&&delta<0&&!e.ctrlKey)reverseScroll=true;const direction=reverseScroll&&!e.ctrlKey?delta:-delta;zoomAt(target.z*Math.exp(Math.max(-120,Math.min(120,direction))*.0025),e.clientX,e.clientY)},{passive:false});
+let tapGesture=null;
 svg.addEventListener('pointerdown',e=>{
+ if(e.button!==0)return;
+ tapGesture=touches.size===0?{id:e.pointerId,x:e.clientX,y:e.clientY,moved:false}:null;
  activate(null);hideHoverPhoto();
  svg.setPointerCapture(e.pointerId);touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
  drag={x:e.clientX,y:e.clientY,moved:false};
  if(touches.size===2){const pts=[...touches.values()];pinch={distance:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),z:target.z};drag=null}
 });
 svg.addEventListener('pointermove',e=>{
- if(!touches.has(e.pointerId))return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(!touches.has(e.pointerId))return;
+ if(tapGesture&&Math.hypot(e.clientX-tapGesture.x,e.clientY-tapGesture.y)>8)tapGesture.moved=true;
+ touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(touches.size===2&&pinch){const pts=[...touches.values()],distance=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);zoomAt(pinch.z*distance/Math.max(1,pinch.distance),(pts[0].x+pts[1].x)/2,(pts[0].y+pts[1].y)/2);return}
  if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>1)drag.moved=true;target.x-=dx/(fit*camera.z);target.y-=dy/(fit*camera.z);drag.x=e.clientX;drag.y=e.clientY;clampCamera(target);scheduleCamera()}
 });
-function releasePointer(e){touches.delete(e.pointerId);drag=null;pinch=null;if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId)}
+function releasePointer(e){
+ const tapped=e.type==='pointerup'&&touches.size===1&&tapGesture?.id===e.pointerId&&!tapGesture.moved&&Math.hypot(e.clientX-tapGesture.x,e.clientY-tapGesture.y)<=8;
+ touches.delete(e.pointerId);drag=null;pinch=null;tapGesture=null;
+ if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId);
+ if(tapped){pointer={x:e.clientX,y:e.clientY};detect();clearTimeout(hoverDelay);const record=hoverByRegion.get(current);if(record)showHoverPhoto(record)}
+}
 svg.addEventListener('pointerup',releasePointer);svg.addEventListener('pointercancel',releasePointer);
 window.addEventListener('resize',resizeCamera);
 window.addEventListener('keydown',e=>{
