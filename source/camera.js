@@ -1,7 +1,8 @@
 // Full-window camera. Zoom 1 fits the complete source drawing.
 const canvas=document.querySelector('#macro'),ctx=canvas.getContext('2d');
 let viewport={w:innerWidth,h:innerHeight},fit=1;
-const camera={x:730,y:625,z:2.25},target={...camera};
+const streetStart={x:180,y:480,z:2.25};
+const camera={...streetStart},target={...camera};
 let cameraFrame=0,drag=null,pinch=null,chaos=0,reverseScroll=false;
 const touches=new Map();
 function hash(n){const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v)}
@@ -10,6 +11,18 @@ const marks=MARK_DATA.map((m,i)=>{const [x,y,length,angle,r,group]=m;return{x,y,
 function minimumZoom(){return Math.max(viewport.w/1536,viewport.h/1024)/fit}
 function clampCamera(c){c.z=Math.max(minimumZoom(),Math.min(16,c.z));const hw=viewport.w/(2*fit*c.z),hh=viewport.h/(2*fit*c.z);c.x=hw>=768?768:Math.max(hw,Math.min(1536-hw,c.x));c.y=hh>=512?512:Math.max(hh,Math.min(1024-hh,c.y))}
 const titleOverlay=document.querySelector('#title-overlay'),titleLink=document.querySelector('#paper-link');
+const zoomHint=document.createElement('div');zoomHint.id='street-zoom-hint';
+zoomHint.setAttribute('role','group');zoomHint.setAttribute('aria-label','Zoom controls');
+for(const [label,symbol,factor] of [['Zoom in','ZOOM IN',1.25],['Zoom out','ZOOM OUT',.8]]){const button=document.createElement('button');button.type='button';button.textContent=symbol;button.setAttribute('aria-label',label);button.addEventListener('click',()=>{pointer=null;activate(null);hideHoverPhoto();zoomAt(target.z*factor)});zoomHint.append(button)}
+document.body.append(zoomHint);
+const zoomHintStyle=document.createElement('style');zoomHintStyle.textContent='#street-zoom-hint{position:fixed;bottom:max(62px,calc(env(safe-area-inset-bottom) + 52px));left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;white-space:nowrap}#street-zoom-hint[hidden]{display:none}#street-zoom-hint button{display:grid;place-items:center;min-width:90px;height:40px;padding:0 6px;border:0;border-radius:0;background:none;color:#111;font:700 12px/1.4 Arial,sans-serif;letter-spacing:.1em;-webkit-text-stroke:5px #fff;paint-order:stroke fill;text-shadow:0 0 3px #fff;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}#street-zoom-hint button:focus-visible{outline:1px solid #008a52;outline-offset:2px}';document.head.append(zoomHintStyle);
+const panControls=document.createElement('nav');panControls.id='street-pan-controls';panControls.setAttribute('aria-label','Move around the street');
+for(const [direction,dx,dy] of [['up',0,-1],['right',1,0],['down',0,1],['left',-1,0]]){
+ const button=document.createElement('button');button.type='button';button.className='street-pan-arrow pan-'+direction;button.setAttribute('aria-label','Move '+direction);button.innerHTML='<span aria-hidden="true"></span>';
+ button.addEventListener('click',()=>{if(chaos>0||scrollY>0)return;pointer=null;activate(null);hideHoverPhoto();const distance=Math.max(90,Math.min(viewport.w,viewport.h)*.2)/(fit*target.z);target.x+=dx*distance;target.y+=dy*distance;clampCamera(target);scheduleCamera()});panControls.append(button);
+}
+document.body.append(panControls);
+const panStyle=document.createElement('style');panStyle.textContent='#street-pan-controls[hidden]{display:none}.street-pan-arrow{position:fixed;z-index:6;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:0;background:none;color:#000;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.street-pan-arrow:focus-visible{outline:1px solid #008a52;outline-offset:2px}.street-pan-arrow span{display:block;width:0;height:0;border:6px solid transparent}.pan-up{top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%)}.pan-up span{border-top:0;border-bottom:8px solid #000}.pan-down{bottom:max(10px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%)}.pan-down span{border-bottom:0;border-top:8px solid #000}.pan-left{left:max(10px,env(safe-area-inset-left));top:50%;transform:translateY(-50%)}.pan-left span{border-left:0;border-right:8px solid #000}.pan-right{right:max(10px,env(safe-area-inset-right));top:50%;transform:translateY(-50%)}.pan-right span{border-right:0;border-left:8px solid #000}#street-zoom-hint{bottom:max(62px,calc(env(safe-area-inset-bottom) + 52px))}';document.head.append(panStyle);
 let textTargets=[],macroSources=[],macroMode=false;
 function smooth(a,b,value){const t=Math.max(0,Math.min(1,(value-a)/(b-a)));return t*t*(3-2*t)}
 function makeTextTargets(){
@@ -59,7 +72,8 @@ function renderCamera(){
  const t=Math.max(0,Math.min(1,(camera.z-3.3)/5));chaos=t*t*(3-2*t);
  if(chaos>0&&!macroMode){macroMode=true;activate(null);makeTextTargets();captureMacroSources()}
  if(chaos===0){macroMode=false;document.body.dataset.text='0.000';titleOverlay.style.opacity=0;titleLink.style.pointerEvents='none';titleLink.tabIndex=-1;titleOverlay.setAttribute('aria-hidden','true');canvas.style.opacity=1;setReadingReady(false)}
- svg.setAttribute('aria-label',chaos>0?'Rye Lane. The Everyday Visibility and Publicness of Shopfronts. Scroll down to read the paper, or zoom out to return to the street.':'Market scene. Scroll or pinch to zoom, drag to pan, press 0 for the full scene, or Escape to return to the fruit stall.')
+ svg.setAttribute('aria-label',chaos>0?'Rye Lane. The Everyday Visibility and Publicness of Shopfronts. Scroll down to read the paper, or zoom out to return to the street.':'Market scene. Scroll or pinch to zoom, drag to pan, press 0 for the full scene, or Escape to return to the contact view.')
+ zoomHint.hidden=camera.z>=10||window.scrollY>0;panControls.hidden=chaos>0||window.scrollY>0;
  document.body.dataset.zoom=camera.z.toFixed(2);document.body.dataset.chaos=chaos.toFixed(3);
  canvas.style.display=chaos>0?'block':'none';svg.classList.toggle('macro',chaos>0);
  if(chaos>0)paintMacro();
@@ -75,8 +89,9 @@ function zoomAt(z,x=viewport.w/2,y=viewport.h/2){
  z=Math.max(minimumZoom(),Math.min(16,z));const worldX=target.x+(x-viewport.w/2)/(fit*target.z),worldY=target.y+(y-viewport.h/2)/(fit*target.z);
  target.x=worldX-(x-viewport.w/2)/(fit*z);target.y=worldY-(y-viewport.h/2)/(fit*z);target.z=z;clampCamera(target);scheduleCamera();
 }
-window.addEventListener('wheel',e=>{const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.h:1);if(window.scrollY>0||(readingReady&&delta>0&&!e.ctrlKey))return;e.preventDefault();if(readingReady&&delta<0&&!e.ctrlKey)reverseScroll=true;const direction=reverseScroll&&!e.ctrlKey?delta:-delta;zoomAt(target.z*Math.exp(Math.max(-120,Math.min(120,direction))*.0025),e.clientX,e.clientY)},{passive:false});
+window.addEventListener('wheel',e=>{if(document.querySelector('#project-contact')?.open)return;const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.h:1);if(window.scrollY>0||(readingReady&&delta>0&&!e.ctrlKey))return;e.preventDefault();if(readingReady&&delta<0&&!e.ctrlKey)reverseScroll=true;const direction=reverseScroll&&!e.ctrlKey?delta:-delta;zoomAt(target.z*Math.exp(Math.max(-120,Math.min(120,direction))*.0025),e.clientX,e.clientY)},{passive:false});
 svg.addEventListener('pointerdown',e=>{
+ activate(null);hideHoverPhoto();
  svg.setPointerCapture(e.pointerId);touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
  drag={x:e.clientX,y:e.clientY,moved:false};
  if(touches.size===2){const pts=[...touches.values()];pinch={distance:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),z:target.z};drag=null}
@@ -90,12 +105,13 @@ function releasePointer(e){touches.delete(e.pointerId);drag=null;pinch=null;if(s
 svg.addEventListener('pointerup',releasePointer);svg.addEventListener('pointercancel',releasePointer);
 window.addEventListener('resize',resizeCamera);
 window.addEventListener('keydown',e=>{
+ if(document.querySelector('#project-contact')?.open)return;
  if(window.scrollY>1)return;
  if(readingReady&&['ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();enterReading();return}
  if(['+','=','-','0','Home','Escape','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();
  if(e.key==='+'||e.key==='=')zoomAt(target.z*1.25);if(e.key==='-')zoomAt(target.z/1.25);
  if(e.key==='0'||e.key==='Home'){Object.assign(target,{x:768,y:512,z:minimumZoom()});clampCamera(target);scheduleCamera()}
- if(e.key==='Escape'){Object.assign(target,{x:730,y:625,z:2.25});clampCamera(target);scheduleCamera()}
+ if(e.key==='Escape'){Object.assign(target,{...streetStart});clampCamera(target);scheduleCamera()}
  const moves={ArrowUp:[0,-60],ArrowDown:[0,60],ArrowLeft:[-60,0],ArrowRight:[60,0]};if(moves[e.key]){target.x+=moves[e.key][0]/(fit*camera.z);target.y+=moves[e.key][1]/(fit*camera.z);clampCamera(target);scheduleCamera()}
 });
 if('scrollRestoration' in history)history.scrollRestoration='manual';
@@ -126,7 +142,7 @@ resizeCamera();
 if(location.hash==='#paper')requestAnimationFrame(enterReading);
 syncReadingScroll();
 
-function resetStreet(){reverseScroll=false;window.scrollTo({top:0,behavior:'instant'});Object.assign(camera,{x:730,y:625,z:2.25});clampCamera(camera);Object.assign(target,camera);activate(null);renderCamera();syncReadingScroll();history.replaceState(null,'',location.pathname+'?start=street');}
+function resetStreet(){reverseScroll=false;window.scrollTo({top:0,behavior:'instant'});Object.assign(camera,{...streetStart});clampCamera(camera);Object.assign(target,camera);activate(null);renderCamera();syncReadingScroll();history.replaceState(null,'',location.pathname+'?start=street');}
 window.addEventListener('hashchange',()=>{if(location.hash==='#street'||!location.hash)resetStreet()});
 if(new URLSearchParams(location.search).get('start')==='street')resetStreet();
 window.addEventListener('rye-fonts-change',()=>{if(macroMode){makeTextTargets();paintMacro()}});

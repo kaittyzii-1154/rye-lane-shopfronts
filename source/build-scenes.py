@@ -42,7 +42,7 @@ for number,(name,prefix,masks) in scene_data.items():
   photo=str(info.get('photo') or f'{prefix}-{len(label_keys):02d}');assert all(c.isalnum() or c in '-_' for c in photo), 'Invalid photo identifier'
   image=f'assets/photo-{photo}.svg'
   if not (site/image).exists():(site/image).write_text('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="800" height="600" fill="#000"/></svg>')
-  records.append(dict(id=photo,region=key,label=label,image=image,title=label if custom else f'A moment around the {label.lower()}',text=(info.get('story') or 'Field notes will be added here.') if custom else f'Someone might pause here while another person makes room to pass. The {label.lower()} could become a meeting point, a workplace, or a temporary obstacle at different times of day.',type=('Field notes pending' if not info.get('story') else 'Illustrative scenario') if custom else 'Illustrative scenario'))
+  records.append(dict(id=str(info.get('number') or photo),region=key,label=label,image=image,title=label if custom else f'A moment around the {label.lower()}',text=(info.get('story') or 'Field notes will be added here.') if custom else f'Someone might pause here while another person makes room to pass. The {label.lower()} could become a meeting point, a workplace, or a temporary obstacle at different times of day.',type=('Field notes pending' if not info.get('story') else 'Illustrative scenario') if custom else 'Illustrative scenario'))
  for parent in list(root.iter()):
   for line in list(parent):
    if line.tag.split('}')[-1]!='line':continue
@@ -54,14 +54,26 @@ for number,(name,prefix,masks) in scene_data.items():
  root.set('role','img');root.set('aria-label',name+' interactive drawing');
  for original_title in root.findall('{http://www.w3.org/2000/svg}title'):original_title.text=name
  svg=E.tostring(root,encoding='unicode')
- runtime=(site/'source/scene-camera.js').read_text().replace('SCENE_REGIONS',json.dumps(regions)).replace('SCENE_VIEW',json.dumps(view))
+ if custom:
+  for record in records:
+   info=custom_info[record['label']]
+   destination=info.get('targetScene')
+   if destination:
+    assert destination in scene_data and destination!=number
+    destination_name=scene_data[destination][0]
+    record.update(displayName=destination_name,label=destination_name,title=destination_name,image=f'assets/scene-{destination:02d}.svg',href=f'scene-{destination:02d}.html',text='')
+ runtime=(site/'source/scene-camera.js').read_text().replace('SCENE_REGIONS',json.dumps(regions)).replace('SCENE_VIEW',json.dumps(view)).replace('SCENE_ZOOM_LIMIT','2' if number==2 else 'null')
  hover=(site/'source/hover-cards.js').read_text().replace('CARD_RECORDS',json.dumps(records))
- page=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{name}</title><style>{css}</style></head><body><header><a href="scenes.html">← Other scenes</a><span>{name}</span><a href="index.html?start=street">Back to street ↗</a></header><div id="scene-view">{svg}</div><script>{runtime}\n{hover}</script></body></html>'''
+ # Temporarily disable photo popups in Street study 01–04; keep overview navigation cards.
+ if number!=2:hover='function scheduleHoverCard(){}'
+ back_href='scene-02.html' if number!=2 else 'index.html?start=street'
+ back_label='Street overview' if number!=2 else 'Back to street'
+ page=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{name}</title><style>{css}</style></head><body><header><a href="scenes.html">← Other scenes</a><span>{name}</span><a href="{back_href}">{back_label} ↗</a></header><div id="scene-view">{svg}</div><script>{runtime}\n{hover}</script></body></html>'''
  if number==2 and not custom:page=page.replace('Hover for 0.3 seconds to discover a photo · Click the photo to turn it over · Scroll to zoom · Double-click to reset','Scroll to zoom · Drag to explore · Double-click to reset')
  (site/f'scene-{number:02d}.html').write_text(page);all_records[f'scene-{number:02d}.html']=dict(name=name,regions=regions,photos=records)
  print(name,len(regions),'regions',sum(len(g)-1 for g in groups),'lines')
 (site/'scene-regions.json').write_text(json.dumps(all_records,indent=2))
 order=[2,3,4,5,1];cards=[]
 for i in order:
- name=scene_data[i][0];featured=' featured' if i==2 else '';cards.append(f'<a class="scene{featured}" href="scene-{i:02d}.html"><img src="assets/thumb-scene-{i:02d}.webp" alt="{name}"'+('' if i==2 else ' loading="lazy"')+f'><span>{name} ↗</span></a>')
-(site/'scenes.html').write_text('''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Other scenes — Rye Lane</title><style>*{box-sizing:border-box}body{margin:0;background:white;color:#111;font-family:Arial,sans-serif}header{padding:24px 4vw;display:flex;justify-content:space-between;font-size:12px;border-bottom:1px solid #eee}a{color:inherit;text-decoration:none}a:hover{color:#008a52}main{padding:45px 4vw}h1{font-size:clamp(30px,4vw,52px);font-weight:500;margin:0 0 36px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:38px 28px}.scene img{width:100%;aspect-ratio:3/2;object-fit:contain;display:block;border-bottom:1px solid #ddd}.scene span{display:block;font-size:13px;margin-top:14px}.featured{grid-column:1/-1;width:100%}.featured img{aspect-ratio:2/1;max-height:70vh}.featured span{font-size:19px}@media(max-width:650px){.grid{grid-template-columns:1fr}.featured img{aspect-ratio:3/2}}</style></head><body><header><a href="index.html?start=street">← Back to street</a><a href="paper.html">Read the paper ↗</a></header><main><h1>Other scenes</h1><div class="grid">'''+''.join(cards)+'''</div></main></body></html>''')
+ name=scene_data[i][0];featured=' featured' if i==2 else '';preview=f'assets/scene-{i:02d}.svg' if i==2 else f'assets/thumb-scene-{i:02d}.webp';cards.append(f'<a class="scene{featured}" href="scene-{i:02d}.html"><img src="{preview}" alt="{name}"'+('' if i==2 else ' loading="lazy"')+f'><span>{name} ↗</span></a>')
+(site/'scenes.html').write_text('''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Other scenes — Rye Lane</title><style>*{box-sizing:border-box}body{margin:0;background:white;color:#111;font-family:Arial,sans-serif}header{padding:24px 4vw;display:flex;justify-content:space-between;font-size:12px;border-bottom:1px solid #eee}a{color:inherit;text-decoration:none}a:hover{color:#008a52}main{padding:45px 4vw}h1{font-size:clamp(30px,4vw,52px);font-weight:500;margin:0 0 36px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:38px 28px}.scene img{width:100%;aspect-ratio:3/2;object-fit:contain;display:block;border-bottom:1px solid #ddd}.scene span{display:block;font-size:13px;margin-top:14px}.featured{grid-column:1/-1;width:100%}.featured img{aspect-ratio:1528.4/1078.4;max-height:none}.featured span{font-size:19px}@media(max-width:650px){.grid{grid-template-columns:1fr}}</style></head><body><header><a href="index.html?start=street">← Back to street</a><a href="paper.html">Read the paper ↗</a></header><main><h1>Other scenes</h1><div class="grid">'''+''.join(cards)+'''</div></main></body></html>''')

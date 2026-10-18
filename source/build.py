@@ -6,6 +6,9 @@ source=Path('/Users/jiangcai/Desktop/MA ISD UNIT3/SVG/10.10-市场摊位正视-�
 regions=[]
 def add(key,name,points,kind='object'):
  regions.append(dict(id=key,name=name,polygon=points,kind=kind))
+# The two left-wall panels share the Alleyway hover target.
+add('contact-panels-upper','上墙框',[(0,280),(165,280),(165,455),(0,455)])
+add('contact-panels-lower','下墙框',[(0,505),(165,505),(165,675),(0,675)])
 add('bollard','街道防撞柱',[(1285,655),(1300,647),(1330,651),(1340,668),(1340,883),(1351,896),(1351,938),(1280,938),(1280,895),(1290,885),(1291,718),(1285,705)])
 add('awning','遮阳篷篷布',[(451,316),(527,295),(596,256),(622,266),(693,301),(779,323),(878,340),(967,348),(1037,339),(1056,352),(1064,417),(1036,418),(1029,454),(996,466),(910,451),(812,434),(704,408),(605,381),(521,351),(460,334)])
 add('pole-left','遮阳篷左支撑杆',[(442,327),(460,329),(451,607),(439,646),(431,677),(428,843),(412,844),(429,578)])
@@ -67,6 +70,7 @@ for i,line in enumerate(root.findall('.//{http://www.w3.org/2000/svg}line')):
 merge_specs=[
  ('canopy','遮阳篷与全部支撑杆',['awning','pole-left','pole-right','pole-back']),
  ('left-scene','左墙与中景细节',['building-left','architecture-detail']),
+ ('contact-panels','墙框',['contact-panels-upper','contact-panels-lower']),
  ('right-architecture','右侧与中景建筑',['building-right','building-back']),
  ('left-plants','左侧与中景攀援植物',[r['id'] for r in regions if r['id'].startswith('ivy-')]),
  ('hanging-fruit','悬挂水果',[r['id'] for r in regions if r['id'].startswith('bananas-')]),
@@ -86,7 +90,7 @@ for r in regions:
  merged_groups[key]+=groups[r['id']]
 regions=list(merged.values());groups=merged_groups
 def texture(key,items):
- pattern='dots' if key=='left-plants' or key.startswith('plant-') else 'vertical' if key in ('left-scene','right-architecture','bollard') else 'scattered' if key in ('hanging-fruit','stall-fruit','stall-racks') else 'horizontal'
+ pattern='dots' if key=='left-plants' or key.startswith('plant-') else 'vertical' if key in ('left-scene','right-architecture','bollard','contact-panels') else 'scattered' if key in ('hanging-fruit','stall-fruit','stall-racks') else 'horizontal'
  if pattern=='horizontal':return ''.join(items),pattern
  shapes=[];dot_carry=0.0
  for text in items:
@@ -119,28 +123,53 @@ def texture(key,items):
     lo,hi=min(x1,x2),max(x1,x2)
     shapes.append(f'<line {attrs} x1="{max(lo,min(hi,x-dx)):.3f}" y1="{max(0,min(1024,y-dy)):.3f}" x2="{max(lo,min(hi,x+dx)):.3f}" y2="{max(0,min(1024,y+dy)):.3f}"/>')
  return ''.join(shapes),pattern
-english_names={'bollard':'Street bollard','canopy':'Canopy and supports','hanging-fruit':'Hanging fruit','stall-fruit':'Fruit display','stall-racks':'Fruit display racks','plant-alley':'Alley plant','plant-window-top':'Upper window plant','plant-window-bottom':'Lower window plant','plant-window-right':'Right window plant','left-plants':'Climbing plants','right-architecture':'Right and middle buildings','left-scene':'Left wall and middle details','pavement':'Pavement and drain'}
+english_names={'contact-panels':'Wall panels','bollard':'Street bollard','canopy':'Canopy and supports','hanging-fruit':'Hanging fruit','stall-fruit':'Fruit display','stall-racks':'Fruit display racks','plant-alley':'Alley plant','plant-window-top':'Upper window plant','plant-window-bottom':'Lower window plant','plant-window-right':'Right window plant','left-plants':'Climbing plants','right-architecture':'Right and middle buildings','left-scene':'Left wall and middle details','pavement':'Pavement and drain'}
 for r in regions:
  r['name']=english_names[r['id']]
  r.pop('sourceParts',None)
-parts=[]
-for r in reversed(regions):
- r['lineCount']=len(groups[r['id']]);pts=r['polygon'];cx=sum(p[0] for p in pts)/len(pts);cy=sum(p[1] for p in pts)/len(pts)
- marks,r['pattern']=texture(r['id'],groups[r['id']])
- parts.append(f'<g id="{r["id"]}" class="object" data-name="{r["name"]}" style="transform-origin:{cx}px {cy}px"><title>{r["name"]}</title>'+marks+'</g>')
-svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" role="img" tabindex="0" aria-label="Market scene. Scroll or pinch to zoom, drag to pan, press 0 for the full scene, or Escape to return to the fruit stall."><rect width="1536" height="1024" fill="white"/>'+''.join(parts)+'</svg>'
+# Merge interaction targets after creating each part's original texture.
+home_specs=[
+ ('architecture','Left shopfront',['left-scene'],'object'),
+ ('right-shopfront','Right shopfront',['right-architecture'],'object'),
+ ('street','Street and bollard',['pavement','bollard'],'ground'),
+ ('plants','Plants',['plant-alley','plant-window-top','plant-window-bottom','plant-window-right','left-plants','contact-panels'],'object'),
+ ('fruit-stall','Fruit stall',['canopy','hanging-fruit','stall-fruit','stall-racks'],'object'),
+]
+home_lookup={member:key for key,name,members,kind in home_specs for member in members}
+assert set(home_lookup)=={r['id'] for r in regions}
+textured={r['id']:texture(r['id'],groups[r['id']])[0] for r in regions}
+old_regions=regions
+regions=[];parts=[]
+for key,name,members,kind in home_specs:
+ selected=[r for r in old_regions if r['id'] in members]
+ points=[point for r in selected for point in r['polygon']]
+ cx=sum(point[0] for point in points)/len(points);cy=sum(point[1] for point in points)/len(points)
+ record=dict(id=key,name=name,polygon=points,kind=kind,lineCount=sum(len(groups[r['id']]) for r in selected),pattern='mixed')
+ regions.append(record)
+ marks=''.join(textured[r['id']] for r in reversed(old_regions) if r['id'] in members)
+ parts.append(f'<g id="{key}" class="object" data-name="{name}" style="transform-origin:{cx}px {cy}px"><title>{name}</title>'+marks+'</g>')
+for region in hit_regions:region['id']=home_lookup[region['id']]
+contact_markup='<g class="contact-details" aria-label="Rye Lane research project" style="font-family:Arial,sans-serif;fill:#111;stroke:none"><text x="32" y="340" font-size="32" font-weight="800" letter-spacing="-.7">RYE</text><text x="32" y="376" font-size="32" font-weight="800" letter-spacing="-.7">LANE</text><text x="32" y="404" font-size="11">Shopfronts &amp;</text><text x="32" y="420" font-size="11">everyday life</text><text x="32" y="565" font-size="8" fill="#666">A project by</text><text x="32" y="586" font-size="10">Caiyi Jiang</text><a href="#project-contact" aria-label="Contact Caiyi Jiang"><text x="32" y="620" font-size="10">Contact ↗</text></a></g>'
+svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" role="img" tabindex="0" aria-label="Market scene. Scroll or pinch to zoom, drag to pan, press 0 for the full scene, or Escape to return to the contact view."><rect width="1536" height="1024" fill="white"/>'+''.join(parts)+contact_markup+'</svg>'
 page='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Everyday Visibility and Publicness of Shopfronts</title><style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;overscroll-behavior:none}svg{display:block;position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;touch-action:none;outline:none}#macro{position:fixed;inset:0;width:100vw;height:100dvh;pointer-events:none;display:none}svg.macro .object{visibility:hidden}.object{pointer-events:none;will-change:auto}.object line{fill:none;stroke:#1a1a1a;stroke-width:1.55;stroke-linecap:round}.object.active line{stroke:#008a52;stroke-width:1.9}.object circle{fill:#1a1a1a;stroke:none}.object.active circle{fill:#008a52}.object.active{will-change:transform}.object{transition:color .15s} 
 #title-overlay{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;color:#000;font-family:Arial,sans-serif}#title-overlay .location{position:absolute;top:12%;left:0;width:100%;text-align:center;font-size:clamp(12px,1.4vw,18px);font-weight:500;letter-spacing:.18em}#title-overlay h1{position:absolute;left:5%;top:50%;transform:translateY(-50%);width:90%;margin:0;text-align:center;font-size:clamp(32px,min(8.5vw,13.5vh),128px);line-height:1.18;font-weight:600;letter-spacing:-.025em}#paper-link{display:block;text-decoration:none;color:inherit;pointer-events:none;cursor:pointer}#paper-link:focus-visible{outline:2px solid #008a52;outline-offset:14px}#paper-link:hover{--title-ink:#008a52}.title-line{display:block;color:#000;background:none;-webkit-text-fill-color:#000} @media(max-width:540px){#title-overlay h1{font-size:clamp(26px,7.7vw,44px)}}
 html.reading-ready{overflow-y:auto;scrollbar-width:none}html.reading-ready::-webkit-scrollbar{display:none}body.reading-ready{height:200dvh;overflow:visible}body>svg,#macro,#title-overlay{transform:translateY(calc(-1 * var(--page-scroll,0px)))}#paper{position:absolute;top:100dvh;left:0;width:100%;height:auto;min-height:100dvh;visibility:hidden}body.reading-ready #paper{visibility:visible}#paper iframe{width:100%;height:100%;border:0;display:block;background:#fff;pointer-events:auto}body.in-paper #paper iframe{pointer-events:auto}#reading-cue{position:absolute;bottom:5%;left:0;width:100%;text-align:center;font:11px Arial,sans-serif;letter-spacing:.12em;color:#555}
-</style><style>#reading-navigation{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 5vw;border-bottom:1px solid #eee;background:rgba(255,255,255,.98);color:#161616;font:12px Arial,sans-serif}#reading-navigation[hidden]{display:none}#reading-navigation a{color:inherit;text-decoration:none;pointer-events:auto}#reading-navigation a:hover{color:#008a52}@media(max-width:600px){#reading-navigation{padding:17px 22px}#reading-navigation span{display:none}}</style></head><body>'''+svg+'''<canvas id="macro" aria-hidden="true"></canvas><div id="title-overlay" aria-hidden="true"><div class="location morph-text">RYE LANE</div><h1><a id="paper-link" href="#paper" tabindex="-1" aria-label="Read The Everyday Visibility and Publicness of Shopfronts"><span class="title-line morph-text">THE EVERYDAY</span><span class="title-line morph-text">VISIBILITY AND</span><span class="title-line morph-text">PUBLICNESS OF</span><span class="title-line morph-text">SHOPFRONTS</span></a></h1><div id="reading-cue">Scroll down to read · Pinch or press − to zoom out</div></div><section id="paper" aria-label="Research paper"><iframe src="paper.html" title="The Everyday Visibility and Publicness of Shopfronts research paper" loading="lazy"></iframe></section><script>
+</style><style>#reading-navigation{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 5vw;border-bottom:1px solid #eee;background:rgba(255,255,255,.98);color:#161616;font:12px Arial,sans-serif}#reading-navigation[hidden]{display:none}#reading-navigation a{color:inherit;text-decoration:none;pointer-events:auto}#reading-navigation a:hover{color:#008a52}@media(max-width:600px){#reading-navigation{padding:17px 22px}#reading-navigation span{display:none}}</style><style>.contact-details{pointer-events:auto}.contact-details a{cursor:pointer}.contact-details a:hover text,.contact-details a:focus text{fill:#008a52;text-decoration:underline}svg.macro .contact-details{visibility:hidden}</style><style>#project-contact{position:fixed;width:min(330px,calc(100vw - 40px));padding:32px;border:1px solid #ddd;border-radius:18px;background:#fff;color:#222;font:14px/1.6 Arial,sans-serif}#project-contact::backdrop{background:#0003}#project-contact h2{margin:0 0 22px;font:500 22px/1.2 Arial,sans-serif}#project-contact a{display:block;margin:10px 0;color:inherit;text-decoration:none}#project-contact a:hover{text-decoration:underline}#project-contact p{margin:10px 0}#project-contact .contact-close{position:absolute;right:10px;top:8px;width:30px;height:30px;padding:0;border:0;background:none;font:24px Arial,sans-serif;color:#333;cursor:pointer}</style></head><body>'''+svg+'''<canvas id="macro" aria-hidden="true"></canvas><div id="title-overlay" aria-hidden="true"><div class="location morph-text">RYE LANE</div><h1><a id="paper-link" href="#paper" tabindex="-1" aria-label="Read The Everyday Visibility and Publicness of Shopfronts"><span class="title-line morph-text">THE EVERYDAY</span><span class="title-line morph-text">VISIBILITY AND</span><span class="title-line morph-text">PUBLICNESS OF</span><span class="title-line morph-text">SHOPFRONTS</span></a></h1><div id="reading-cue">Scroll down to read</div></div><dialog id="project-contact" aria-labelledby="project-contact-title"><button type="button" class="contact-close" aria-label="Close contact details">×</button><h2 id="project-contact-title">Caiyi Jiang</h2><a href="mailto:kaittyzii@gmail.com">kaittyzii@gmail.com</a><a href="https://www.instagram.com/kaittyi/" target="_blank" rel="noopener noreferrer">Instagram · @kaittyi ↗</a><p>WeChat · Turmeriv</p></dialog><section id="paper" aria-label="Research paper"><iframe src="paper.html" title="The Everyday Visibility and Publicness of Shopfronts research paper" loading="lazy"></iframe></section><script>
 const hitRegions=HITREGIONS;
 const regions=REGIONS,svg=document.querySelector('svg'),objects=new Map(regions.map(r=>[r.id,document.getElementById(r.id)])),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function inside(p,poly){let hit=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>p.y)!=(b[1]>p.y)&&p.x<(b[0]-a[0])*(p.y-a[1])/(b[1]-a[1])+a[0])hit=!hit}return hit}
 let current=null,animation=null,frame=0,pointer=null;
 function activate(id){if(id===current)return;if(animation){animation.cancel();animation=null}if(current)objects.get(current).classList.remove('active');current=id;if(typeof scheduleHoverCard==='function')scheduleHoverCard(id);if(typeof chaos!=='undefined'&&chaos>.00001)paintMacro();if(!id){svg.style.cursor='default';return}const el=objects.get(id);el.classList.add('active');svg.style.cursor='pointer';const ground=regions.find(r=>r.id===id).kind==='ground';animation=el.animate(reduced?[{opacity:.7},{opacity:1}]:[{transform:'translate(0px,0px) scale(1)'},{transform:`translate(0px,${ground?-2:-9}px) scale(${ground?1:1.012})`,offset:.48},{transform:`translate(0px,${ground?-1:-6}px) scale(${ground?1:1.008})`}],{duration:420,fill:'forwards',easing:'cubic-bezier(.2,.8,.3,1)'});}
-function detect(){frame=0;if(typeof chaos!=='undefined'&&chaos>0){activate(null);return}const m=svg.getScreenCTM();if(!m||!pointer)return;const p=new DOMPoint(pointer.x,pointer.y).matrixTransform(m.inverse());if(p.x<0||p.y<0||p.x>1536||p.y>1024){activate(null);return}const r=hitRegions.find(r=>inside(p,r.polygon));activate(r?.id||null)}
+function detect(){frame=0;if(typeof drag!=='undefined'&&drag){activate(null);return}if(typeof chaos!=='undefined'&&chaos>0){activate(null);return}const m=svg.getScreenCTM();if(!m||!pointer)return;const p=new DOMPoint(pointer.x,pointer.y).matrixTransform(m.inverse());if(p.x<0||p.y<0||p.x>1536||p.y>1024){activate(null);return}const r=hitRegions.find(r=>inside(p,r.polygon));activate(r?.id||null)}
 svg.addEventListener('pointermove',e=>{pointer={x:e.clientX,y:e.clientY};if(!frame)frame=requestAnimationFrame(detect)});svg.addEventListener('pointerleave',()=>{pointer=null;activate(null)});svg.addEventListener('pointerdown',e=>{pointer={x:e.clientX,y:e.clientY};detect()});svg.addEventListener('pointercancel',()=>activate(null));svg.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')activate(null)});window.addEventListener('blur',()=>activate(null));
+const contactDialog=document.querySelector('#project-contact');
+svg.querySelector('a[href="#project-contact"]').addEventListener('click',e=>{e.preventDefault();activate(null);hideHoverPhoto();contactDialog.showModal()});
+contactDialog.querySelector('.contact-close').addEventListener('click',()=>contactDialog.close());
+contactDialog.addEventListener('click',e=>{if(e.target===contactDialog){const r=contactDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)contactDialog.close()}});
+
+// Contact links do not initiate scene dragging or photo-card hovers.
+for(const eventType of ['pointermove','pointerdown','pointerup'])svg.addEventListener(eventType,e=>{if(e.target.closest('.contact-details a')){e.stopPropagation();pointer=null;activate(null);if(typeof hideHoverPhoto==='function')hideHoverPhoto()}},{capture:true});
 CAMERA
 </script></body></html>'''.replace('CAMERA',Path(__file__).with_name('camera.js').read_text()+'\n'+Path(__file__).with_name('hover-cards.js').read_text().replace('CARD_RECORDS',json.dumps(json.loads((Path(__file__).resolve().parent.parent/'hover-cards.json').read_text()),ensure_ascii=False))).replace('HITREGIONS',json.dumps(hit_regions,ensure_ascii=False)).replace('REGIONS',json.dumps(regions,ensure_ascii=False))
 from optimize_assets import main_page
