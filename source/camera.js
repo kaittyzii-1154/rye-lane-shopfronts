@@ -90,7 +90,13 @@ function zoomAt(z,x=viewport.w/2,y=viewport.h/2){
  target.x=worldX-(x-viewport.w/2)/(fit*z);target.y=worldY-(y-viewport.h/2)/(fit*z);target.z=z;clampCamera(target);scheduleCamera();
 }
 window.addEventListener('wheel',e=>{if(document.querySelector('#project-contact')?.open)return;const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.h:1);if(window.scrollY>0||(readingReady&&delta>0&&!e.ctrlKey))return;e.preventDefault();if(readingReady&&delta<0&&!e.ctrlKey)reverseScroll=true;const direction=reverseScroll&&!e.ctrlKey?delta:-delta;zoomAt(target.z*Math.exp(Math.max(-120,Math.min(120,direction))*.0025),e.clientX,e.clientY)},{passive:false});
-let tapGesture=null;
+// A touch-generated click can land on the newly opened card. Consume only
+// that click; a new pointer gesture or keyboard action restores normal input.
+let tapGesture=null,tapClickPending=false;
+document.addEventListener('pointerdown',()=>{tapClickPending=false},{capture:true});
+document.addEventListener('keydown',()=>{tapClickPending=false},{capture:true});
+document.addEventListener('click',e=>{if(!tapClickPending)return;tapClickPending=false;if(e.detail===0)return;e.preventDefault();e.stopImmediatePropagation()},{capture:true});
+const touchStyle=document.createElement('style');touchStyle.textContent='svg, #hover-photo, #hover-photo *{-webkit-tap-highlight-color:transparent}svg{-webkit-user-select:none;user-select:none}svg:focus{outline:none}#hover-flip:focus:not(:focus-visible){outline:none}';document.head.append(touchStyle);
 svg.addEventListener('pointerdown',e=>{
  if(e.button!==0)return;
  tapGesture=touches.size===0?{id:e.pointerId,x:e.clientX,y:e.clientY,moved:false}:null;
@@ -110,7 +116,7 @@ function releasePointer(e){
  const tapped=e.type==='pointerup'&&touches.size===1&&tapGesture?.id===e.pointerId&&!tapGesture.moved&&Math.hypot(e.clientX-tapGesture.x,e.clientY-tapGesture.y)<=8;
  touches.delete(e.pointerId);drag=null;pinch=null;tapGesture=null;
  if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId);
- if(tapped){pointer={x:e.clientX,y:e.clientY};detect();clearTimeout(hoverDelay);const record=hoverByRegion.get(current);if(record)showHoverPhoto(record)}
+ if(tapped){pointer={x:e.clientX,y:e.clientY};detect();clearTimeout(hoverDelay);const record=hoverByRegion.get(current);if(record){tapClickPending=e.pointerType!=='mouse';showHoverPhoto(record)}}
 }
 svg.addEventListener('pointerup',releasePointer);svg.addEventListener('pointercancel',releasePointer);
 window.addEventListener('resize',resizeCamera);
