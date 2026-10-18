@@ -1141,7 +1141,7 @@
     ],
     "photos": [
       {
-        "id": "S04-02",
+        "id": "01",
         "region": "part-01",
         "label": "Fruit display",
         "image": "assets/photo-S04-02.svg",
@@ -1150,7 +1150,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S04-03",
+        "id": "02",
         "region": "part-02",
         "label": "Display racks",
         "image": "assets/photo-S04-03.svg",
@@ -1159,7 +1159,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S04-05",
+        "id": "03",
         "region": "part-03",
         "label": "Buildings",
         "image": "assets/photo-S04-05.svg",
@@ -1168,7 +1168,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S04-04",
+        "id": "04",
         "region": "part-04",
         "label": "people",
         "image": "assets/photo-S04-04.svg",
@@ -1177,7 +1177,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S04-05",
+        "id": "05",
         "region": "part-05",
         "label": "street",
         "image": "assets/photo-S04-05.svg",
@@ -1214,33 +1214,7 @@
       },
       {
         "id": "part-02",
-        "name": "shopfronts",
-        "polygon": [
-          [
-            534.0,
-            447.0
-          ],
-          [
-            0.0,
-            765.0
-          ],
-          [
-            0.0,
-            590.0
-          ],
-          [
-            525.0,
-            293.0
-          ],
-          [
-            534.0,
-            287.99999999999994
-          ]
-        ]
-      },
-      {
-        "id": "part-02",
-        "name": "shopfronts",
+        "name": "Upper-right buildings",
         "polygon": [
           [
             574.0005872801104,
@@ -1281,54 +1255,34 @@
         ]
       },
       {
-        "id": "part-02",
-        "name": "shopfronts",
+        "id": "part-03",
+        "name": "Shopfronts and street",
         "polygon": [
           [
-            305.27268863148527,
-            723.753141409986
+            534.0,
+            447.0
           ],
           [
-            706.3232768930999,
-            478.9158660780069
+            0.0,
+            765.0
           ],
           [
-            1208.0000842287873,
-            765.962537500782
+            0.0,
+            590.0
           ],
           [
-            1338.3954041572651,
-            834.9974152914572
+            525.0,
+            293.0
           ],
           [
-            1348.6455065703476,
-            958.6819844093188
-          ],
-          [
-            896.5283824404789,
-            1188.0389768661553
-          ],
-          [
-            457.37719982459436,
-            1017.1776543342348
-          ],
-          [
-            186.00354824541296,
-            1147.2575864961564
-          ],
-          [
-            2.097437257868478,
-            1100.1596800237364
-          ],
-          [
-            -20.33013725280773,
-            866.9129051127045
+            534.0,
+            287.99999999999994
           ]
         ]
       },
       {
-        "id": "part-02",
-        "name": "shopfronts",
+        "id": "part-03",
+        "name": "Shopfronts and street",
         "polygon": [
           [
             0.0,
@@ -1362,7 +1316,7 @@
       },
       {
         "id": "part-03",
-        "name": "Street and streetlights",
+        "name": "Shopfronts and street",
         "polygon": [
           [
             534.0,
@@ -1420,7 +1374,7 @@
       },
       {
         "id": "part-03",
-        "name": "Street and streetlights",
+        "name": "Shopfronts and street",
         "polygon": [
           [
             0.0,
@@ -1447,35 +1401,98 @@
             885.0
           ]
         ]
+      },
+      {
+        "id": "part-04",
+        "name": "Lower-middle buildings",
+        "polygon": [
+          [
+            305.27268863148527,
+            723.753141409986
+          ],
+          [
+            706.3232768930999,
+            478.9158660780069
+          ],
+          [
+            1208.0000842287873,
+            765.962537500782
+          ],
+          [
+            1338.3954041572651,
+            834.9974152914572
+          ],
+          [
+            1348.6455065703476,
+            958.6819844093188
+          ],
+          [
+            896.5283824404789,
+            1188.0389768661553
+          ],
+          [
+            457.37719982459436,
+            1017.1776543342348
+          ],
+          [
+            186.00354824541296,
+            1147.2575864961564
+          ],
+          [
+            2.097437257868478,
+            1100.1596800237364
+          ],
+          [
+            -20.33013725280773,
+            866.9129051127045
+          ]
+        ]
       }
     ],
     "photos": [
       {
-        "id": "O-01",
+        "id": "01",
         "region": "part-01",
-        "label": "street shop",
-        "image": "assets/photo-O-01.svg",
-        "title": "street shop",
-        "text": "Field notes will be added here.",
-        "type": "Field notes pending"
+        "label": "Street study 02",
+        "image": "assets/scene-04.svg",
+        "title": "Street study 02",
+        "text": "",
+        "type": "Field notes pending",
+        "displayName": "Street study 02",
+        "href": "scene-04.html"
       },
       {
-        "id": "2",
+        "id": "03",
         "region": "part-02",
-        "label": "shopfronts",
-        "image": "assets/photo-2.svg",
-        "title": "shopfronts",
-        "text": "Field notes will be added here.",
-        "type": "Field notes pending"
+        "label": "Street study 03",
+        "image": "assets/scene-05.svg",
+        "title": "Street study 03",
+        "text": "",
+        "type": "Field notes pending",
+        "displayName": "Street study 03",
+        "href": "scene-05.html"
       },
       {
-        "id": "O-street",
+        "id": "02",
         "region": "part-03",
-        "label": "Street and streetlights",
-        "image": "assets/photo-O-street.svg",
-        "title": "Street and streetlights",
-        "text": "Field notes will be added here.",
-        "type": "Field notes pending"
+        "label": "Street study 01",
+        "image": "assets/scene-03.svg",
+        "title": "Street study 01",
+        "text": "",
+        "type": "Field notes pending",
+        "displayName": "Street study 01",
+        "href": "scene-03.html"
+      },
+      {
+        "id": "04",
+        "region": "part-04",
+        "label": "Street study 01",
+        "image": "assets/scene-03.svg",
+        "title": "Street study 01",
+        "text": "",
+        "type": "Field notes pending",
+        "displayName": "Street study 01",
+        "href": "scene-03.html"
       }
     ]
   },
@@ -1865,7 +1882,7 @@
     ],
     "photos": [
       {
-        "id": "S01-1",
+        "id": "01",
         "region": "part-01",
         "label": "buildings",
         "image": "assets/photo-S01-1.svg",
@@ -1874,7 +1891,7 @@
         "type": "Field notes pending"
       },
       {
-        "id": "S01-2",
+        "id": "02",
         "region": "part-02",
         "label": "street",
         "image": "assets/photo-S01-2.svg",
@@ -1883,7 +1900,7 @@
         "type": "Field notes pending"
       },
       {
-        "id": "S01-3",
+        "id": "03",
         "region": "part-03",
         "label": "people",
         "image": "assets/photo-S01-3.svg",
@@ -1892,7 +1909,7 @@
         "type": "Field notes pending"
       },
       {
-        "id": "S01-4",
+        "id": "04",
         "region": "part-04",
         "label": "evironment",
         "image": "assets/photo-S01-4.svg",
@@ -2224,7 +2241,7 @@
     ],
     "photos": [
       {
-        "id": "S02-01",
+        "id": "01",
         "region": "part-01",
         "label": "People",
         "image": "assets/photo-S02-01.svg",
@@ -2233,7 +2250,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S02-02",
+        "id": "02",
         "region": "part-02",
         "label": "Plants",
         "image": "assets/photo-S02-02.svg",
@@ -2242,7 +2259,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S02-03",
+        "id": "03",
         "region": "part-03",
         "label": "Street vendors",
         "image": "assets/photo-S02-03.svg",
@@ -2251,7 +2268,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S02-04",
+        "id": "04",
         "region": "part-04",
         "label": "Buildings",
         "image": "assets/photo-S02-04.svg",
@@ -2260,7 +2277,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S02-04",
+        "id": "05",
         "region": "part-05",
         "label": "shop",
         "image": "assets/photo-S02-04.svg",
@@ -2626,7 +2643,7 @@
     ],
     "photos": [
       {
-        "id": "S03-01",
+        "id": "01",
         "region": "part-01",
         "label": "Street and streetlights",
         "image": "assets/photo-S03-01.svg",
@@ -2635,7 +2652,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S03-06",
+        "id": "02",
         "region": "part-02",
         "label": "Foreground building",
         "image": "assets/photo-S03-06.svg",
@@ -2644,7 +2661,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S03-02",
+        "id": "03",
         "region": "part-03",
         "label": "Street vendors",
         "image": "assets/photo-S03-02.svg",
@@ -2653,7 +2670,7 @@
         "type": "Illustrative scenario"
       },
       {
-        "id": "S03-05",
+        "id": "04",
         "region": "part-04",
         "label": "Middle building",
         "image": "assets/photo-S03-05.svg",

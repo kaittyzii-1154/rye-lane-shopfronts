@@ -1,119 +1,67 @@
 [
   {
     "id": "01",
-    "region": "bollard",
-    "label": "Street bollard",
-    "image": "assets/photo-01.svg",
-    "title": "A narrow pause",
-    "text": "Someone could pause beside the bollard to check a shopping list while other people pass between the stall and the street.",
-    "type": "Illustrative scenario"
+    "region": "architecture",
+    "label": "Shopfront",
+    "image": "assets/kumasi-market.jpg",
+    "title": "Shopfront",
+    "text": "Goods extend from the shop interior onto the pavement, making the shopfront a place of display, exchange and everyday encounter.",
+    "type": "Illustrative scenario",
+    "displayName": "Shopfront",
+    "businessName": "Kumasi Market",
+    "address": "74 Peckham High St, London SE15 5ED",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Kumasi%20Market%2C%2074%20Peckham%20High%20St%2C%20London%20SE15%205ED"
   },
   {
     "id": "02",
-    "region": "canopy",
-    "label": "Canopy and supports",
-    "image": "assets/photo-02.svg",
-    "title": "A change in the weather",
-    "text": "A sudden shower could bring shoppers under the canopy. A dry display might briefly become a shared place to wait.",
-    "type": "Illustrative scenario"
+    "region": "street",
+    "label": "Street",
+    "image": "assets/rye-lane-street.png",
+    "title": "Street",
+    "text": "Walking, waiting and stopping share the same stretch of pavement, bringing different rhythms of everyday life into contact.",
+    "type": "Illustrative scenario",
+    "displayName": "Street",
+    "businessName": "Rye Lane",
+    "address": "U8, Aylesham Centre, Rye Ln, London SE15 5EW",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=U8%2C%20Aylesham%20Centre%2C%20Rye%20Ln%2C%20London%20SE15%205EW"
   },
   {
     "id": "03",
-    "region": "hanging-fruit",
-    "label": "Hanging fruit",
-    "image": "assets/photo-03.svg",
-    "title": "A question across the stall",
-    "text": "A customer might point at a bunch of bananas and ask whether it will be ripe tomorrow. Choosing fruit can become a short conversation.",
-    "type": "Illustrative scenario"
+    "region": "plants",
+    "label": "Alleyway",
+    "image": "assets/wall-traces.png",
+    "title": "Layers of traces",
+    "text": "Layers of traces accumulate on the walls of streets and alleyways, covered over and worn away with time.",
+    "type": "Field observation",
+    "address": "119 Rye Ln, London SE15 4RY",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=119%20Rye%20Ln%2C%20London%20SE15%204RY",
+    "displayName": "Alleyway",
+    "businessName": "119 Rye Lane"
   },
   {
     "id": "04",
-    "region": "stall-fruit",
-    "label": "Fruit display",
-    "image": "assets/photo-04.svg",
-    "title": "Choosing and rearranging",
-    "text": "A shopper could turn a piece of fruit in their hand, while a worker quietly rearranges the display after each selection.",
-    "type": "Illustrative scenario"
+    "region": "fruit-stall",
+    "label": "Street vending",
+    "image": "assets/street-vending.jpg",
+    "title": "Street vending",
+    "text": "The boundary between shop and street becomes a place to pause, trade and talk.",
+    "type": "Field observation",
+    "displayName": "Street vending",
+    "businessName": "Sakhi Quality Meat & Fish London",
+    "address": "6 Rye Ln, London SE15 5BS",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sakhi%20Quality%20Meat%20%26%20Fish%20London%2C%206%20Rye%20Ln%2C%20London%20SE15%205BS"
   },
   {
     "id": "05",
-    "region": "stall-racks",
-    "label": "Display racks",
-    "image": "assets/photo-05.svg",
-    "title": "The work behind the display",
-    "text": "Before the stall opens, someone could carry, stack and steady these boxes. The arrangement that looks finished depends on repeated small tasks.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "06",
-    "region": "plant-alley",
-    "label": "Alley plant",
-    "image": "assets/photo-06.svg",
-    "title": "A small detour",
-    "text": "A watering can might briefly share the passage with a delivery trolley. Two ordinary tasks could require a quick negotiation over space.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "07",
-    "region": "plant-window-top",
-    "label": "Upper window plant",
-    "image": "assets/photo-07.svg",
-    "title": "Looking through",
-    "text": "A passer-by could stop to look at the plant and notice their own reflection in the shop window.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "08",
-    "region": "plant-window-bottom",
-    "label": "Lower window plant",
-    "image": "assets/photo-08.svg",
-    "title": "Care during a quiet moment",
-    "text": "During a lull, someone might turn the pot towards the light. A tiny adjustment could be part of the work that keeps the frontage welcoming.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "09",
-    "region": "plant-window-right",
-    "label": "Right window plant",
-    "image": "assets/photo-09.svg",
-    "title": "A familiar marker",
-    "text": "A regular customer might use this plant as a meeting point: wait by the window, just past the fruit stall.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "10",
-    "region": "left-plants",
-    "label": "Climbing plants",
-    "image": "assets/photo-10.svg",
-    "title": "Changing slowly",
-    "text": "A new leaf could appear between two visits. The street changes on a different timescale from the daily movement of goods.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "11",
-    "region": "right-architecture",
-    "label": "Right and middle buildings",
-    "image": "assets/photo-11.svg",
-    "title": "One entrance, several needs",
-    "text": "A delivery, a customer and a passer-by could reach the same entrance together. Who waits, and who has room to move?",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "12",
-    "region": "left-scene",
-    "label": "Left wall and middle details",
-    "image": "assets/photo-12.svg",
-    "title": "An everyday landmark",
-    "text": "A small mark on a familiar wall might be enough for a worker to remember where a stack of boxes usually stops.",
-    "type": "Illustrative scenario"
-  },
-  {
-    "id": "13",
-    "region": "pavement",
-    "label": "Pavement and drain",
-    "image": "assets/photo-13.svg",
-    "title": "After the stall closes",
-    "text": "An empty pavement could still carry traces of the day: a loose leaf, a damp patch, or the route taken by a trolley.",
-    "type": "Illustrative scenario"
+    "region": "right-shopfront",
+    "label": "Shop window",
+    "image": "assets/daydreamer-shop-window.jpg",
+    "title": "Shop window",
+    "text": "Reflections of the street overlap with the view inside, bringing the shop interior and passing street life into the same frame.",
+    "type": "Field observation",
+    "displayName": "Shop window",
+    "businessName": "Daydreamer",
+    "address": "133a Rye Ln, London SE15 4BQ",
+    "mapUrl": "https://www.google.com/maps?cid=1819064478084663168"
   }
 ]

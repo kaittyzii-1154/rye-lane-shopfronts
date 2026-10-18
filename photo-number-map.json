@@ -1,0 +1,204 @@
+[
+  {
+    "number": "01",
+    "page": "index.html",
+    "region": "architecture",
+    "label": "Shopfront",
+    "image": "assets/kumasi-market.jpg",
+    "displayName": "Shopfront"
+  },
+  {
+    "number": "02",
+    "page": "index.html",
+    "region": "street",
+    "label": "Street",
+    "image": "assets/rye-lane-street.png",
+    "displayName": "Street"
+  },
+  {
+    "number": "03",
+    "page": "index.html",
+    "region": "plants",
+    "label": "Alleyway",
+    "image": "assets/wall-traces.png",
+    "displayName": "Alleyway"
+  },
+  {
+    "number": "04",
+    "page": "index.html",
+    "region": "fruit-stall",
+    "label": "Street vending",
+    "image": "assets/street-vending.jpg",
+    "displayName": "Street vending"
+  },
+  {
+    "number": "01",
+    "page": "scene-03.html",
+    "region": "part-01",
+    "label": "buildings",
+    "image": "assets/photo-S01-1.svg"
+  },
+  {
+    "number": "02",
+    "page": "scene-03.html",
+    "region": "part-02",
+    "label": "street",
+    "image": "assets/photo-S01-2.svg"
+  },
+  {
+    "number": "03",
+    "page": "scene-03.html",
+    "region": "part-03",
+    "label": "people",
+    "image": "assets/photo-S01-3.svg"
+  },
+  {
+    "number": "04",
+    "page": "scene-03.html",
+    "region": "part-04",
+    "label": "evironment",
+    "image": "assets/photo-S01-4.svg"
+  },
+  {
+    "number": "01",
+    "page": "scene-04.html",
+    "region": "part-01",
+    "label": "People",
+    "image": "assets/photo-S02-01.svg"
+  },
+  {
+    "number": "02",
+    "page": "scene-04.html",
+    "region": "part-02",
+    "label": "Plants",
+    "image": "assets/photo-S02-02.svg"
+  },
+  {
+    "number": "03",
+    "page": "scene-04.html",
+    "region": "part-03",
+    "label": "Street vendors",
+    "image": "assets/photo-S02-03.svg"
+  },
+  {
+    "number": "04",
+    "page": "scene-04.html",
+    "region": "part-04",
+    "label": "Buildings",
+    "image": "assets/photo-S02-04.svg"
+  },
+  {
+    "number": "05",
+    "page": "scene-04.html",
+    "region": "part-05",
+    "label": "shop",
+    "image": "assets/photo-S02-04.svg"
+  },
+  {
+    "number": "01",
+    "page": "scene-05.html",
+    "region": "part-01",
+    "label": "Street and streetlights",
+    "image": "assets/photo-S03-01.svg"
+  },
+  {
+    "number": "02",
+    "page": "scene-05.html",
+    "region": "part-02",
+    "label": "Foreground building",
+    "image": "assets/photo-S03-06.svg"
+  },
+  {
+    "number": "03",
+    "page": "scene-05.html",
+    "region": "part-03",
+    "label": "Street vendors",
+    "image": "assets/photo-S03-02.svg"
+  },
+  {
+    "number": "04",
+    "page": "scene-05.html",
+    "region": "part-04",
+    "label": "Middle building",
+    "image": "assets/photo-S03-05.svg"
+  },
+  {
+    "number": "01",
+    "page": "scene-01.html",
+    "region": "part-01",
+    "label": "Fruit display",
+    "image": "assets/photo-S04-02.svg"
+  },
+  {
+    "number": "02",
+    "page": "scene-01.html",
+    "region": "part-02",
+    "label": "Display racks",
+    "image": "assets/photo-S04-03.svg"
+  },
+  {
+    "number": "03",
+    "page": "scene-01.html",
+    "region": "part-03",
+    "label": "Buildings",
+    "image": "assets/photo-S04-05.svg"
+  },
+  {
+    "number": "04",
+    "page": "scene-01.html",
+    "region": "part-04",
+    "label": "people",
+    "image": "assets/photo-S04-04.svg"
+  },
+  {
+    "number": "05",
+    "page": "scene-01.html",
+    "region": "part-05",
+    "label": "street",
+    "image": "assets/photo-S04-05.svg"
+  },
+  {
+    "number": "05",
+    "page": "index.html",
+    "region": "right-shopfront",
+    "label": "Shop window",
+    "image": "assets/daydreamer-shop-window.jpg",
+    "displayName": "Shop window"
+  },
+  {
+    "number": "01",
+    "page": "scene-02.html",
+    "region": "part-01",
+    "label": "Street study 02",
+    "displayName": "Street study 02",
+    "image": "assets/scene-04.svg",
+    "href": "scene-04.html"
+  },
+  {
+    "number": "02",
+    "page": "scene-02.html",
+    "region": "part-03",
+    "label": "Street study 01",
+    "displayName": "Street study 01",
+    "image": "assets/scene-03.svg",
+    "href": "scene-03.html"
+  },
+  {
+    "number": "03",
+    "page": "scene-02.html",
+    "region": "part-02",
+    "label": "Street study 03",
+    "displayName": "Street study 03",
+    "image": "assets/scene-05.svg",
+    "href": "scene-05.html"
+  },
+  {
+    "number": "04",
+    "page": "scene-02.html",
+    "region": "part-04",
+    "label": "Street study 01",
+    "displayName": "Street study 01",
+    "image": "assets/scene-03.svg",
+    "href": "scene-03.html"
+  }
+]
